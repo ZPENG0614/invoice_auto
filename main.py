@@ -6,10 +6,7 @@ import pytesseract
 import pdfplumber
 import os
 import re
-
-
-
-
+#这个是master的分支的修改
 def rename_pdf():
     """对所有的单个pdf文件按照金额进行重命名"""
     for i in range (invoice_num):
@@ -55,27 +52,6 @@ def rename_pdf():
             pdfs_money.append(max(tem_list2))
             pdfs_num.sort()
             pdfs_money.sort(key = float)
-
-
-#
-# def extract_scanned_pdf(order,lang = 'chi_sim'):
-#     """目前该函数必须依靠外部引擎才能正常工作，无法成为广泛适用的python脚本，待修改......
-#         该函数的目的是泛化脚本，使其支持扫描获得的PDF文件
-#     """
-#     text = ''
-#     with pdfplumber.open(os.listdir()[order]) as pdfs:
-#         for page in pdfs.pages:
-#             # 1. 页面转为图片（可加参数：如crop裁剪区域）
-#             img = page.to_image(resolution=300).original  # resolution=300提升清晰度
-#             # 2. OCR识别
-#             text += pytesseract.image_to_string(img, lang=lang) + "\n\n"
-#     return text
-
-
-
-
-
-
 
 def merge_pdf():
     """合并重命名之后的单个pdf文件"""
