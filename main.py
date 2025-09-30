@@ -10,6 +10,7 @@ import re
 #这个是对advanced的分支的修改
 def rename_pdf():
     """对所有的单个pdf文件按照金额进行重命名"""
+    #获取单张发票中的数据
     for i in range (invoice_num):
         text = ''#定义一个接收发票数据的控字符串
         tem_list1 = []
@@ -19,7 +20,7 @@ def rename_pdf():
                 tem_text = j.get_text()
                 text += tem_text
                 tem_text.strip()
-                tem_list1.append(tem_text)
+
         #筛选出单张发票中金额最大的且带有人民币符号的即为发票金额
         if '¥' in text:
             tem_list1 = text.split('\n')
@@ -41,19 +42,14 @@ def rename_pdf():
         else:
             print("第",(i+1),"张名称为",os.listdir()[i],"发生未知异常,请在https://github.com/ZPENG0614/invoice_auto.git中提出issues或是自行修改后提出PR")
             tem_list2 = [888888888]
+
         #对于所有支持的文件（电脑生成的PDF）进行重命名
         if text != '':
             current_time = datetime.now()
-            # 格式化输出（年-月-日 时:分:秒）
-            # formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
-            # 获取当前时间并格式化（替换掉冒号）
             current_time = datetime.now().strftime("%Y-%m-%d %H-%M-%S.%f")
             os.rename(os.listdir()[i],str(max(tem_list2))+'    '+str(current_time)+'.pdf')
             pdfs_num.append(str(max(tem_list2))+'    '+str(current_time))
             pdfs_money.append(max(tem_list2))
-            pdfs_num.sort()
-            pdfs_money.sort(key = float)
-
 
 def merge_pdf():
     """合并重命名之后的单个pdf文件"""
@@ -64,11 +60,11 @@ def merge_pdf():
     # 用于存储（数字, 文件名）的列表
     sorted_items = []
 
+    #正则表达式
     for line in pdfs_list:
-        # 正则提取前面的数字和文件名，\s+匹配一个或多个空白字符
         match = re.match(r'^(\d+\.?\d*)\s+(.*)$', line)
         if match:
-            number = float(match.group(1))  # 转换为浮点数以便排序
+            number = float(match.group(1))
             filename = match.group(2)
             sorted_items.append((number, filename))
 
@@ -78,32 +74,32 @@ def merge_pdf():
     # 提取排序后的文件名
     sorted_filenames = [str(item[0])+'    '+item[1] for item in sorted_items]
 
-    # 打印结果
     for filename in sorted_filenames:
         merger.append(filename)
 
-    os.chdir('..')
+    os.chdir('..')# 切换到上一级目录
     # 保存合并后的文件
     merger.write("合并后pdf文件.pdf")
     merger.close()
 
 
 def excel_pdf():
-    """生成一个excel表格，统计发票的数据"""
     """创建Excel文件并写入数据"""
     # 创建工作簿对象
     wb = Workbook()
     # 获取默认的活动工作表（第一个工作表）
     ws = wb.active
-    # 给工作表命名
 
+    # 给工作表命名
     ws.title = "发票金额汇总"
     ws['A1'] = '发票金额'
     ws['C3'] = '发票张数'
     ws['C4'] = '发票总金额'
+
     #依次写入发票的金额数据
     for i in range(len(pdfs_num)):
         ws['A'+str(i+2)] = str(pdfs_money[i])
+
     ws['D3'] = str(invoice_num+1)#发票张数
     ws['D4'] = str(sum(pdfs_money))#发票总金额
     # 保存文件
@@ -114,24 +110,34 @@ if __name__ == '__main__':
 #上一行代码决定了这段程序的运行方式。
 #1、直接运行，内置变量__name__将被赋值为__main__,条件成立直接执行
 #2、作为模块导入到其他的模块之中，内置变量__name__将被赋值为文件名（不加.py），条件不成立
+
+    #程序开始提示信息
     print('\n')
     print("使用方法：将所有发票pdf文件放到名为发票的文件夹中，然后将发票助手与发票文件夹放入同一级目录下，运行程序即可")
     print("说明：该程序仅支持电脑自动生成的PDF，不支持扫描的PDF，对于扫描的PDF该程序不会进行任何操作。PS:持续更新中......")
     print("按enter键开始运行：entering.........")
     print("按q键退出.........")
-    user_input = input()
+
+    user_input = input()#获取用户输入
     if user_input == '':
         print("程序运行中.......")
         print('\n')
+
+        #一些全局变量
         current_path = os.getcwd()  # 获取当前脚本所在目录
         os.chdir("发票")  # 进入发票目录，以提取相关信息
         invoice_num = len(os.listdir())  # 获取当前发票文件的数量
         pdfs_num = []  # 用来存储发票名称的列表
         pdfs_money = []  # 用来存储发票金额的列表
+
+        #对PDF文件进行操作的函数
         rename_pdf()  # 对所有的发票重命名
         merge_pdf()  # 合并所有的发票
         excel_pdf()  # 将发票数据写入exl文件
+
+        #程序结束提示信息
         print('\n')
         input("已完成，按回车键退出>>>>>>")
     elif user_input == 'q':
         print("程序关闭")
+
