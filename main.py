@@ -6,10 +6,7 @@ import pytesseract
 import pdfplumber
 import os
 import re
-
-
-
-
+#这个是对advanced的分支的修改
 def rename_pdf():
     """对所有的单个pdf文件按照金额进行重命名"""
     for i in range (invoice_num):
