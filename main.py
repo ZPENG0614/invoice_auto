@@ -6,6 +6,7 @@ import pytesseract
 import pdfplumber
 import os
 import re
+
 #这个是对advanced的分支的修改
 def rename_pdf():
     """对所有的单个pdf文件按照金额进行重命名"""
@@ -54,26 +55,6 @@ def rename_pdf():
             pdfs_money.sort(key = float)
 
 
-#
-# def extract_scanned_pdf(order,lang = 'chi_sim'):
-#     """目前该函数必须依靠外部引擎才能正常工作，无法成为广泛适用的python脚本，待修改......
-#         该函数的目的是泛化脚本，使其支持扫描获得的PDF文件
-#     """
-#     text = ''
-#     with pdfplumber.open(os.listdir()[order]) as pdfs:
-#         for page in pdfs.pages:
-#             # 1. 页面转为图片（可加参数：如crop裁剪区域）
-#             img = page.to_image(resolution=300).original  # resolution=300提升清晰度
-#             # 2. OCR识别
-#             text += pytesseract.image_to_string(img, lang=lang) + "\n\n"
-#     return text
-
-
-
-
-
-
-
 def merge_pdf():
     """合并重命名之后的单个pdf文件"""
 
@@ -107,7 +88,6 @@ def merge_pdf():
     merger.close()
 
 
-
 def excel_pdf():
     """生成一个excel表格，统计发票的数据"""
     """创建Excel文件并写入数据"""
@@ -135,8 +115,8 @@ if __name__ == '__main__':
 #1、直接运行，内置变量__name__将被赋值为__main__,条件成立直接执行
 #2、作为模块导入到其他的模块之中，内置变量__name__将被赋值为文件名（不加.py），条件不成立
     print('\n')
-    print("使用方法：将所有发票pdf文件放到名为发票的文件夹中，然后将发票助手与发票文件夹放入同一级目录下，再次运行程序即可")
-    print("说明：该程序仅支持电脑自动生成的PDF，不支持扫描的PDF，对于扫描的PDF该程序不会进行任何操作")
+    print("使用方法：将所有发票pdf文件放到名为发票的文件夹中，然后将发票助手与发票文件夹放入同一级目录下，运行程序即可")
+    print("说明：该程序仅支持电脑自动生成的PDF，不支持扫描的PDF，对于扫描的PDF该程序不会进行任何操作。PS:持续更新中......")
     print("按enter键开始运行：entering.........")
     print("按q键退出.........")
     user_input = input()
