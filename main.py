@@ -1,3 +1,10 @@
+"""
+程序功能：帮助我们自动整理电脑生成的PDF发票文件。PS:暂时不支持扫描生成的PDF文件
+
+author：zpeng
+email：zpeng0614@gmail.com
+
+"""
 from openpyxl import Workbook
 from PyPDF2 import PdfMerger
 from datetime import datetime
@@ -129,15 +136,19 @@ if __name__ == '__main__':
         invoice_num = len(os.listdir())  # 获取当前发票文件的数量
         pdfs_num = []  # 用来存储发票名称的列表
         pdfs_money = []  # 用来存储发票金额的列表
+        try:
+            #对PDF文件进行操作的函数
+            rename_pdf()  # 对所有的发票重命名
 
-        #对PDF文件进行操作的函数
-        rename_pdf()  # 对所有的发票重命名
-        merge_pdf()  # 合并所有的发票
-        excel_pdf()  # 将发票数据写入exl文件
-
-        #程序结束提示信息
-        print('\n')
-        input("已完成，按回车键退出>>>>>>")
+        except PermissionError:
+            print('发票pdf文件已经在其他程序中打开，请关闭后重新运行程序')
+        else:
+            merge_pdf()  # 合并所有的发票
+            excel_pdf()  # 将发票数据写入exl文件
+        finally:
+            #程序结束提示信息
+            print('\n')
+            input("按回车键退出>>>>>>")
     elif user_input == 'q':
         print("程序关闭")
 
